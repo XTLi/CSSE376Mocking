@@ -57,7 +57,8 @@ namespace ExpediaTest
         [TestMethod()]
         public void TestThatHotelDoesGetRoomOccupantFromTheDatabase()
         {
-            IDatabase mockDB = mocks.StrictMock<IDatabase>();
+            //IDatabase mockDB = mocks.StrictMock<IDatabase>();
+            IDatabase mockDB = mocks.DynamicMock<IDatabase>();
             String roomOccupant = "Whale Rider";
             String anotherRoomOccupant = "Raptor Wrangler";
 
@@ -67,6 +68,7 @@ namespace ExpediaTest
             {
                 Expect.Call(mockDB.getRoomOccupant(24)).Return(roomOccupant);
                 Expect.Call(mockDB.getRoomOccupant(1025)).Return(anotherRoomOccupant);
+                //Expect.Call(mockDB.getRoomOccupant()).Return("Empty room").IgnoreArguments();
             }
 
             mocks.ReplayAll();
@@ -80,9 +82,33 @@ namespace ExpediaTest
 
             result = target.getRoomOccupant(1025);
             Assert.AreEqual(anotherRoomOccupant, result);
+
+            //result = target.getRoomOccupant(25);
+            //Assert.AreEqual("Empty room", result);
             
             mocks.VerifyAll();
 
+        }
+
+        [TestMethod()]
+        public void TestThatHotelDoesGetRoomCountFromDatabase()
+        {
+            IDatabase mockDatabase = mocks.StrictMock<IDatabase>();
+            List<Int32> Rooms = new List<int>();
+            for (var i = 0; i < 100; i++)
+            {
+                Rooms.Add(i);
+            }
+
+            Expect.Call(mockDatabase.Rooms).PropertyBehavior();
+            mocks.ReplayAll();
+            mockDatabase.Rooms = Rooms;
+            var target = new Hotel(10);
+            target.Database = mockDatabase;
+            int roomCount = target.AvailableRooms;
+            Assert.AreEqual(roomCount, Rooms.Count);
+            //Assert.AreEqual(Rooms.Count, roomCount);
+            mocks.VerifyAll();
         }
 		
 	}

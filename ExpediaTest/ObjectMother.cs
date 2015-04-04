@@ -5,6 +5,6 @@ namespace ExpediaTest
 {
 	public class ObjectMother
 	{
-		
+      
 	}
 }
